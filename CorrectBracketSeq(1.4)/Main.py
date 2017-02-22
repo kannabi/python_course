@@ -9,21 +9,21 @@ def is_pair(a, b):
 def is_correct_sequence(seq):
     stack = []
 
+    if len(seq) == 0:
+        return True
+
     if not is_opening(seq[0]):
         return False
-
-    counter = 0
 
     for iter in seq:
         if is_opening(iter):
             stack.append(iter)
-            counter += 1
-        else:
-            counter -= 1
-        if len(stack) > 0 and is_pair(stack[len(stack) - 1], iter):
+        elif len(stack) > 0 and is_pair(stack[len(stack) - 1], iter):
             stack.pop()
+        else:
+            return False
 
-    return False if len(stack) or counter != 0 else True
+    return False if len(stack) else True
 
 
 n = int(input())
