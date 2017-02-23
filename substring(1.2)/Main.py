@@ -1,15 +1,27 @@
-n = int(input())
-array = []
+fin = open("input.txt")
 
-i = 0
+n = fin.readline()
+text = []
+for it in fin:
+    text.append(it)
 
-while i < n:
-    array.append(input())
-    i += 1
+# print(text)
 
-j = 0
 i = 1
+j = 0
 
-string = array[0]
+res = ''
 
-print(len(string))
+for it in text:
+    if it.find('\n') != -1:
+        it = it[0: len(it) - 1]
+    while i < len(it):
+        while j + i - 1 < len(it):
+            res += it[j: j + i] + ' '
+            j += 1
+        i += 1
+        j = 0
+    res += it + ' '
+    print(res)
+    res = ''
+    i = 1
