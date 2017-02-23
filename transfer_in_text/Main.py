@@ -1,21 +1,18 @@
 text = ''
 
-step = int(input()) - 1
-
 fin = open("input.txt")
-# print(step)
+fout = open("output.txt", "w")
+step = int(fin.readline()) + 1
 for i in fin:
     text += i
 
-i = step
+i = 0
 SPACE = ' '
-aim = 0
 END_OF_LINE = '\n'
 NOT_FOUND = -1
+aim = 0
 
-print(len(text))
-
-while i < len(text):
+while True:
     aim = text.rfind(END_OF_LINE, i + 1, i + step)
 
     if aim != NOT_FOUND:
@@ -23,15 +20,22 @@ while i < len(text):
         aim = NOT_FOUND
         continue
 
-    if text[i] != SPACE and text[i] != END_OF_LINE:
-        aim = text.find(SPACE, i)
-        if aim == -1:
-            exit()
-        text = text[0: aim] + '\n' + text[aim + 1: len(text)]
-        i = aim
-    else:
-        text = text[0: i] + '\n' + text[i + 1: len(text)]
     i += step
+    try:
+        if text[i] == SPACE:
+            text = text[0: i] + '\n' + text[i + 1: len(text)]
+        elif text[i] == END_OF_LINE: # or not text[i].isalpha():
+            continue
+        else:
+            aim = text.rfind(SPACE, i - step, i)
+            if aim == NOT_FOUND:
+                # raise IndexError
+                continue
+            text = text[0: aim] + '\n' + text[aim + 1: len(text)]
+            i = aim
+    except IndexError:
+        break
 
+fout.write(text)
 
-print(text)
+fout.close()
