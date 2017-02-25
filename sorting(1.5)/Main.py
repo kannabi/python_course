@@ -22,15 +22,11 @@ def foo(a, b):
         foo(l, b)
 
 
-arr = list(input().split())
+fin = open("input.txt")
+
+arr = list(fin.read().split())
 it = 0
 
 foo(0, len(arr) - 1)
 
-res = arr[0]
-it = 1
-while it < len(arr):
-    res += ' ' + str(arr[it])
-    it += 1
-
-print(res)
+print(' '.join(arr))
