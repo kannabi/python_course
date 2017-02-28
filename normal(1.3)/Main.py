@@ -1,6 +1,10 @@
-p = float(input())
+fin = open("input.txt")
 
-arr = list(input())
+p = float(fin.readline())
+
+arr = [float(x) for x in fin.read().split()]
+
+# arr = list(input())
 
 for i in arr:
     if i == ' ':
