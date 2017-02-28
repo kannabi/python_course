@@ -1,3 +1,4 @@
+import sys
 # import no_standard_sort
 
 
@@ -22,11 +23,18 @@ def foo(a, b):
         foo(l, b)
 
 
-fin = open("input.txt")
+# fin = open("input.txt")
 
-arr = list(fin.read().split())
-it = 0
+arr = [int(x) for x in sys.stdin.readline().split()]
 
-foo(0, len(arr) - 1)
+if len(arr) != 0:
+    foo(0, len(arr) - 1)
 
-print(' '.join(arr))
+# print(' '.join(arr))
+res = str(arr[0])
+it = 1
+while it < len(arr):
+    res += ' ' + str(arr[it])
+    it += 1
+
+print(res)
