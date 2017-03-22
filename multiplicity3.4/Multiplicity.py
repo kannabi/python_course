@@ -18,13 +18,12 @@ class Multiplicity:
         for i in range(len(self.space_units) ** self.n):
             blank = i
             while blank > 0:
-                buf.append(self.space_units.get(blank % len(self.space_units)))
+                buf.insert(0, self.space_units.get(blank % len(self.space_units)))
                 blank //= len(self.space_units)
 
             while len(buf) < self.n:
-                buf.append(self.space_units.get(0))
+                buf.insert(0, self.space_units.get(0))
 
-            buf.reverse()
             print(buf)
             buf.clear()
 
