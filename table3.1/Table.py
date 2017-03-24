@@ -34,11 +34,3 @@ class Table:
 
     def head(self, n):
         return self._table[:n]
-
-
-table = Table(6, 6)
-# table.add_columns([[str(j) for _ in range(3)] for j in range(table.get_height())])
-print([[str(j) for _ in range(6)] for j in range(table.get_height())])
-table.add_lines([[str(j) for _ in range(6)] for j in range(table.get_height())])
-table.print()
-
