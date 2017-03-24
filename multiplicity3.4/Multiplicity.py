@@ -9,8 +9,6 @@ class Multiplicity:
         self.space_units = tuple(initial)
         self.space.append(self.space_units[0])
 
-        print(self.space_units)
-
     def next(self):
         self.counter += 1
         blank = self.counter
