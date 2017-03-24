@@ -41,8 +41,11 @@ class Vector:
     def size(self):
         return self.length
 
-    def get(self, i):
-        return self.body[i]
+    def get(self, i = 0):
+        if i != 0:
+            return self.body[i]
+        else:
+            return self.body
 
     def to_string(self):
         return ' '.join(self.body)
