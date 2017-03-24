@@ -1,5 +1,6 @@
 # n -- столбцы, m -- строки
 
+
 class Table:
     def __init__(self, n, m):
         self._table = [[str(j) for _ in range(m)] for j in range(n)]
@@ -11,8 +12,8 @@ class Table:
             print(' '.join(self._table[i]))
 
     def add_lines(self, lines):
-        self._table.append(lines)
-        self._n += 1
+        self._table.extend(lines)
+        self._n += len(lines)
 
     def add_columns(self, columns):
         for i in range(self._n):
@@ -28,14 +29,16 @@ class Table:
     def get_height(self):
         return self._m
 
+    def tail(self, n):
+        return self._table[n:]
+
+    def head(self, n):
+        return self._table[:n]
+
 
 table = Table(6, 6)
-# table.print()
-# print(table.get(2, 4))
-table.add_columns([[str(j) for _ in range(3)] for j in range(table.get_height())])
+# table.add_columns([[str(j) for _ in range(3)] for j in range(table.get_height())])
+print([[str(j) for _ in range(6)] for j in range(table.get_height())])
+table.add_lines([[str(j) for _ in range(6)] for j in range(table.get_height())])
 table.print()
-# table.add_lines([str(table.get_height()) for i in range(table.get_height())])
-# table.print()
-
-print("----------------------------------------")
 
