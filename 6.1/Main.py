@@ -7,6 +7,9 @@ with open("input.txt", 'r') as content_file:
 
 fout = open("output.txt", "w")
 
+for i in range(len(content)):
+    content.extend(content.pop(i).split('\n'))
+
 for it in content:
     it = list(it)
     length = len(it)
