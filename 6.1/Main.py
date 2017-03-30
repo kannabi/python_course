@@ -5,15 +5,17 @@ random.seed()
 with open("input.txt", 'r') as content_file:
     content = content_file.read().split(" ")
 
-fout = open("output.txt", "w")
+length = len(content)
 
-for i in range(len(content)):
-    content.extend(content.pop(i).split('\n'))
+for i in range(length):
+    content[i] = content[i].strip('\n')
+
+fout = open("output.txt", "w")
 
 for it in content:
     it = list(it)
     length = len(it)
+    body = list(it)[1:length - 1]
 
-    for i in range(length - 1):
-        it.insert(length - 2, it.pop(random.randint(1, length - 2)))
-    fout.write("".join(it) + " ")
+    random.shuffle(body)
+    fout.write(it[0] + ''.join(body) + it[length - 1] + " ")
