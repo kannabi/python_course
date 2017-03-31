@@ -1,4 +1,5 @@
 import random
+from sys import argv
 
 random.seed()
 
@@ -12,10 +13,17 @@ for i in range(length):
 
 fout = open("output.txt", "w")
 
-for it in content:
-    it = list(it)
-    length = len(it)
-    body = list(it)[1:length - 1]
+try:
+    for it in content:
+        it = list(it)
+        length = len(it)
+        body = list(it)[1:length - 1]
 
-    random.shuffle(body)
-    fout.write(it[0] + ''.join(body) + it[length - 1] + " ")
+        if argv[1] == "-r":
+            random.shuffle(body)
+        else:
+            body.sort()
+
+        fout.write(it[0] + ''.join(body) + it[length - 1] + " ")
+except IndexError:
+    print("Run with argument: -a -- alphabet order; -r -- random order")
