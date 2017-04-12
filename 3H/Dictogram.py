@@ -47,7 +47,8 @@ class Dictogram:
     def __str__(self):
         answer = str()
         for i in range(len(self._key_gist)):
-            answer += "  " + self._keys[i] + ": " + str(self._key_gist[i] / sum(self._key_gist)) + "\n"
+            key_prob = round(self._key_gist[i] / sum(self._key_gist), 2)
+            answer += "  " + self._keys[i] + ": " + '{:.2f}'.format(key_prob) + "\n"
 
         for word in self._keys:
             if not self._word_gist[self._index(word)]:
@@ -55,7 +56,8 @@ class Dictogram:
             gist = str()
             num_tokens = sum(self._word_gist[self._index(word)].values())
             for column in self._word_gist[self._index(word)].keys():
-                gist += "  " + column + ": " + str(self._word_gist[self._index(word)].get(column) / num_tokens) + "\n"
+                token_prob = round(self._word_gist[self._index(word)].get(column) / num_tokens, 2)
+                gist += "  " + column + ": " + '{:.2f}'.format(token_prob) + "\n"
             answer += word + ":\n" + gist
         return answer
 

@@ -32,20 +32,6 @@ def get_probabilities(input_file, depth):
         probabilities.add_key(prob_word)
         return probabilities
 
-
-# corpus = get_words_set("input.txt")
-# for w in corpus:
-#     print("  " + w, corpus.get(w))
-
 res = get_probabilities("input.txt", 1)
 
 print(res)
-
-# d = Dictogram(tuple(set(filter(lambda x: x != ' ', get_raw_data("input.txt")))))
-#
-# d.put("test", "line")
-# d.put("test", "line")
-# d.put("test", "pisos pisosa")
-#
-# print(d)
-# print(d["test"])
