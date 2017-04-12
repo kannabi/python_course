@@ -1,26 +1,35 @@
 import re
+import argparse
 from Dictogram import Dictogram
 
 PATTERN = r'[a-zA-Zа-яА-Я\']+|[^a-zA-Z\d\n]{1}|[0-9]+|[\n]{1}'
 
 
-def get_raw_data(input_file):
+def init_parser():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest="subparser_name")
+
+    prob_parser = subparsers.add_parser("probabilities")
+    prob_parser.add_argument("--depth", action="store", nargs=1, type=int, required=True)
+
+    generate_parser = subparsers.add_parser("generate")
+    generate_parser.add_argument("--depth", action="store", nargs=1, type=int, required=True)
+    generate_parser.add_argument("--size", action="store", nargs=1, type=int, required=True)
+
+    test_parser = subparsers.add_parser("test")
+    tokenize_parser = subparsers.add_parser("tokenize")
+
+    return parser
+
+
+def get_tokens(input_file):
     with open(input_file) as fin:
+        fin.readline()
         return re.findall(PATTERN, fin.read())
 
 
-def get_words_set(input_file):
-    data = get_raw_data(input_file)
-    _corpus = []
-    for word in set(data):
-        _corpus.append(word)
-    return _corpus
-
-
-# TODO: Refactor this fucking try block!
 def get_probabilities(input_file, depth):
-    word_data = tuple(filter(lambda x: x != ' ', get_raw_data(input_file)))
-    # word_data = tuple(filter(lambda x: x.isalpha() or x.isdigit(), get_raw_data(input_file)))
+    word_data = tuple(filter(lambda x: x != ' ', get_tokens(input_file)))
     probabilities = Dictogram()
     try:
         for i in range(len(word_data)):
@@ -34,15 +43,22 @@ def get_probabilities(input_file, depth):
         probabilities.add_key(cur_word)
         return probabilities
 
-# res = get_probabilities("input_dovlatov.txt", 1)
-res = get_probabilities("input.txt", 2)
-print(res)
-#
-# cur_world = res.get_random_world()
-#
-# line = str()
-# for i in range(7):
-#     cur_world = res.get_next_word(cur_world)
-#     line += cur_world + ' '
-# print(line.rstrip())
 
+with open("input.txt") as f:
+    args = init_parser().parse_args(f.readline().split())
+
+if args.subparser_name == "probabilities":
+    probs = get_probabilities("input.txt", args.depth[0])
+    print(probs)
+    exit()
+
+if args.subparser_name == "tokenize":
+    corpus = list(get_tokens("input.txt"))
+    for word in corpus:
+        print(word)
+
+if args.subparser_name == "generate":
+    print("How to make fcking generating?!")
+
+if args.subparser_name == "test":
+    print("All the okey. Maybe. Or not. Are you okey?")
