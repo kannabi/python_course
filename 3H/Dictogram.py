@@ -1,5 +1,5 @@
 import random
-import operator
+
 
 class Dictogram:
     def __init__(self):
@@ -13,13 +13,11 @@ class Dictogram:
 
         if '\n' in key:
             return
+
         self.add_key(key)
 
         if '\n' in token:
             return
-
-        if token == '':
-            print(key, token)
 
         if token in self._word_gist[self._index(key)]:
             self._word_gist[self._index(key)][token] += 1
