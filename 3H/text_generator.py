@@ -1,7 +1,7 @@
 import re
 from Dictogram import Dictogram
 
-PATTERN = r'[a-zA-Zа-яА-Я\']+|[^a-zA-Z\d\n]{1}|[0-9]+'
+PATTERN = r'[a-zA-Zа-яА-Я\']+|[^a-zA-Z\d\n]{1}|[0-9]+|[\n]{1}'
 
 
 def get_raw_data(input_file):

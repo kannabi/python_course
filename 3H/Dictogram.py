@@ -8,9 +8,11 @@ class Dictogram:
         if not isinstance(key, str) or not isinstance(token, str):
             raise ValueError
 
+        if key == '\n':
+            return
         self.add_key(key)
 
-        if token[0].isupper():
+        if token == '\n':
             return
 
         if token in self._word_gist[self._index(key)]:
@@ -47,7 +49,7 @@ class Dictogram:
     def __str__(self):
         answer = str()
         for i in range(len(self._key_gist)):
-            key_prob = round(self._key_gist[i] / sum(self._key_gist), 2)
+            key_prob = self._key_gist[i] / sum(self._key_gist)
             answer += "  " + self._keys[i] + ": " + '{:.2f}'.format(key_prob) + "\n"
 
         for word in self._keys:
@@ -56,7 +58,7 @@ class Dictogram:
             gist = str()
             num_tokens = sum(self._word_gist[self._index(word)].values())
             for column in self._word_gist[self._index(word)].keys():
-                token_prob = round(self._word_gist[self._index(word)].get(column) / num_tokens, 2)
+                token_prob = self._word_gist[self._index(word)].get(column) / num_tokens
                 gist += "  " + column + ": " + '{:.2f}'.format(token_prob) + "\n"
             answer += word + ":\n" + gist
         return answer
