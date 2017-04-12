@@ -19,19 +19,34 @@ def get_words_set(input_file):
     return _corpus
 
 
+# TODO: Refactor this fucking try block!
 def get_probabilities(input_file, depth):
-    word_data = tuple(filter(lambda x: x != ' ', get_raw_data(input_file)))
+    # word_data = tuple(filter(lambda x: x != ' ', get_raw_data(input_file)))
+    word_data = tuple(filter(lambda x: x.isalpha() or x.isdigit(), get_raw_data(input_file)))
     probabilities = Dictogram()
     try:
         for i in range(len(word_data)):
             cur_word = word_data[i]
+            prob_word = str()
             for k in range(1, depth + 1):
-                prob_word = word_data[i + k]
-                probabilities.put(cur_word, prob_word)
+                prob_word += word_data[i + k] + ' '
+            prob_word = prob_word.rstrip(' ')
+            probabilities.put(cur_word, prob_word)
     except IndexError:
-        probabilities.add_key(prob_word)
+        while i < len(word_data):
+            probabilities.add_key(word_data[i])
+            i += 1
         return probabilities
 
-res = get_probabilities("input.txt", 1)
+res = get_probabilities("input_dovlatov.txt", 1)
 
 print(res)
+
+cur_world = res.get_random_world()
+
+line = str()
+for i in range(7):
+    cur_world = res.get_next_word(cur_world)
+    line += cur_world + ' '
+print(line.rstrip())
+

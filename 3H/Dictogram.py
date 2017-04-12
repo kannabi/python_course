@@ -1,3 +1,6 @@
+import random
+import operator
+
 class Dictogram:
     def __init__(self):
         self._keys = []
@@ -8,12 +11,15 @@ class Dictogram:
         if not isinstance(key, str) or not isinstance(token, str):
             raise ValueError
 
-        if key == '\n':
+        if '\n' in key:
             return
         self.add_key(key)
 
-        if token == '\n':
+        if '\n' in token:
             return
+
+        if token == '':
+            print(key, token)
 
         if token in self._word_gist[self._index(key)]:
             self._word_gist[self._index(key)][token] += 1
@@ -62,6 +68,17 @@ class Dictogram:
                 gist += "  " + column + ": " + '{:.2f}'.format(token_prob) + "\n"
             answer += word + ":\n" + gist
         return answer
+
+    def get_random_world(self):
+        random.seed()
+        return self._keys[random.randint(0, len(self._keys))]
+
+    def get_next_word(self, key):
+        key_index = self._index(key)
+        if self._word_gist[key_index]:
+            return max(self._word_gist[key_index], key=self._word_gist[key_index].get)
+        else:
+            return self.get_random_world()
 
     def _index(self, key):
         return self._keys.index(key)
