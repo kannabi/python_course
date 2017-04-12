@@ -8,8 +8,10 @@ class Dictogram:
         if not isinstance(key, str) or not isinstance(token, str):
             raise ValueError
 
-        # if key not in self._keys:
         self.add_key(key)
+
+        if token[0].isupper():
+            return
 
         if token in self._word_gist[self._index(key)]:
             self._word_gist[self._index(key)][token] += 1
@@ -18,9 +20,16 @@ class Dictogram:
 
     def add_key(self, key):
         if key not in self._keys:
-            self._keys.append(key)
-            self._word_gist.append({})
-            self._key_gist.append(1)
+            for k in self._keys:
+                if k > key:
+                    self._keys.insert(self._index(k), key)
+                    break
+
+            if key not in self._keys:
+                self._keys.append(key)
+
+            self._word_gist.insert(self._index(key), {})
+            self._key_gist.insert(self._index(key), 1)
         else:
             self._key_gist[self._index(key)] += 1
 
