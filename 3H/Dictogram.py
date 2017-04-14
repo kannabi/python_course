@@ -41,14 +41,15 @@ class Dictogram:
 
     def get_probability(self, key, token):
         if token in self._word_gist[self._index(key)]:
-            return self._word_gist[self._index(key)].get(token) / sum(self._word_gist[self._index(key)].values())
+            s = sum(self._word_gist[self._index(key)].values())
+            return self._word_gist[self._index(key)].get(token) / s
         else:
             return 0.0
 
     def __getitem__(self, item):
-        pos = self._index(item)
-        num = sum(self._word_gist[pos].values())
-        return {token: self._word_gist[pos].get(token) / num for token in self._word_gist[pos].keys()}
+        p = self._index(item)
+        num = sum(self._word_gist[p].values())
+        return {token: self._word_gist[p].get(token) / num for token in self._word_gist[p].keys()}
 
     def __str__(self):
         answer = '\n'

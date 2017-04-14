@@ -115,7 +115,8 @@ def get_tokens(input_file):
 
 
 def get_probabilities(input_file, depth):
-    word_data = tuple(filter(lambda x: x != ' ', get_tokens(input_file)))
+    word_data = tuple(
+        filter(lambda x: x.isalpha() or x.isdigit() or '\n' in x, get_tokens(input_file)))
     probabilities = Dictogram()
     try:
         for i in range(len(word_data)):
@@ -144,7 +145,7 @@ if args.subparser_name == "tokenize":
         print(word)
 
 if args.subparser_name == "generate":
-    print("How to make fcking generating?!")
+    print("Wooop")
 
 if args.subparser_name == "test":
     print("All the okey. Maybe. Or not. Are you okey?")
