@@ -35,10 +35,10 @@ def get_probabilities(input_file, depth):
         for i in range(len(word_data)):
             cur_word = str()
             for k in range(i, i + depth):
-                cur_word += word_data[k] + ' '
-            cur_word = cur_word.rstrip(' ')
-            prob_word = word_data[i + depth]
-            probabilities.put(cur_word, prob_word)
+                cur_word += ' ' + word_data[k]
+                cur_word = cur_word.lstrip(' ')
+                prob_word = word_data[k + 1]
+                probabilities.put(cur_word, prob_word)
     except IndexError:
         probabilities.add_key(cur_word)
         return probabilities
@@ -53,7 +53,7 @@ if args.subparser_name == "probabilities":
     exit()
 
 if args.subparser_name == "tokenize":
-    corpus = list(get_tokens("input.txt"))
+    corpus = tuple(filter(lambda x: x != '\n', get_tokens("input.txt")))
     for word in corpus:
         print(word)
 
