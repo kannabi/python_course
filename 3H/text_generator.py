@@ -40,7 +40,7 @@ def get_probabilities(input_file, depth):
                 prob_word = word_data[k + 1]
                 probabilities.put(cur_word, prob_word)
     except IndexError:
-        probabilities.add_key(cur_word)
+        # probabilities.add_key(cur_word)
         return probabilities
 
 

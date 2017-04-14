@@ -56,7 +56,7 @@ class Dictogram:
         return {token: self._word_gist[p].get(token) / num for token in self._word_gist[p].keys()}
 
     def __str__(self):
-        answer = str()
+        answer = '\n'
         for i in range(len(self._key_gist)):
             key_prob = self._key_gist[i] / sum(self._key_gist)
             answer += "  " + self._keys[i] + ": " + '{:.2f}'.format(key_prob) + "\n"
@@ -69,7 +69,8 @@ class Dictogram:
             for column in sorted(self._word_gist[self._index(word)].keys()):
                 token_prob = self._word_gist[self._index(word)].get(column) / num_tokens
                 gist += "  " + column + ": " + '{:.2f}'.format(token_prob) + "\n"
-            answer += word + ":\n" + gist
+            answer += word + "\n" + gist
+        answer = answer.rstrip('\n')
         return answer
 
     def get_random_world(self):
