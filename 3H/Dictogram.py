@@ -53,8 +53,12 @@ class Dictogram:
 
     def __str__(self):
         answer = '\n'
-        for i in range(len(self._key_gist)):
-            key_prob = self._key_gist[i] / sum(self._key_gist)
+
+        single_words = [word for word in self._keys if ' ' not in word]
+        single_words_gist = [self._key_gist[self._index(w)] for w in single_words]
+
+        for i in range(len(single_words)):
+            key_prob = single_words_gist[i] / sum(single_words_gist)
             answer += "  " + self._keys[i] + ": " + '{:.2f}'.format(key_prob) + "\n"
 
         for word in self._keys:

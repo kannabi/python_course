@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import re
 import argparse
-# from Dictogram import Dictogram
 import random
 
 
@@ -57,9 +56,12 @@ class Dictogram:
 
     def __str__(self):
         answer = '\n'
-        for i in range(len(self._key_gist)):
-            key_prob = self._key_gist[i] / sum(self._key_gist)
-            answer += "  " + self._keys[i] + ": " + '{:.2f}'.format(key_prob) + "\n"
+        single_words = [word for word in self._keys if ' ' not in word]
+        single_words_gist = [self._key_gist[self._index(w)] for w in single_words]
+
+        for i in range(len(single_words)):
+            key_prob = single_words_gist[i] / sum(single_words_gist)
+            answer += "  " + single_words[i] + ": " + '{:.2f}'.format(key_prob) + "\n"
 
         for word in self._keys:
             if not self._word_gist[self._index(word)]:
@@ -73,16 +75,20 @@ class Dictogram:
         answer = answer.rstrip('\n')
         return answer
 
-    def get_random_world(self):
+    def get_random_word(self, depth):
         random.seed()
-        return self._keys[random.randint(0, len(self._keys))]
+        suitable_words = [w for w in self._keys if len(w.split(' ')) == depth]
+        return suitable_words[random.randint(0, len(suitable_words))]
 
     def get_next_word(self, key):
-        key_index = self._index(key)
-        if self._word_gist[key_index]:
-            return max(self._word_gist[key_index], key=self._word_gist[key_index].get)
-        else:
-            return self.get_random_world()
+        splitted_key = key.split(' ')
+        dep = len(splitted_key)
+        for i in range(dep, 1, -1):
+            key_index = self._index(' '.join(splitted_key[:-dep + 1]))
+            if self._word_gist[key_index]:
+                return max(self._word_gist[key_index], key=self._word_gist[key_index].get)
+        random.seed()
+        return self.get_random_word(random.randint(1, dep))
 
     def _index(self, key):
         return self._keys.index(key)
@@ -131,7 +137,20 @@ def get_probabilities(input_file, depth):
         return probabilities
 
 
-with open("input.txt") as f:
+def generate_text(input_file, depth, size):
+    dictogram = get_probabilities(input_file, depth)
+    cur_word = dictogram.get_random_word(depth)
+    text = str()
+    for i in range(depth, size):
+        text += cur_word
+        text += ' '
+        cur_word = dictogram.get_next_word(cur_word)
+    text = text.lower()
+    text = text[:1].upper() + text[1:]
+    print(text)
+
+
+with open("input_bg.txt") as f:
     args = init_parser().parse_args(f.readline().split())
 
 if args.subparser_name == "probabilities":
@@ -143,9 +162,12 @@ if args.subparser_name == "tokenize":
     corpus = tuple(filter(lambda x: x != '\n', get_tokens("input.txt")))
     for word in corpus:
         print(word)
+    exit()
 
 if args.subparser_name == "generate":
-    print("Wooop")
+    generate_text("input_bg.txt", args.depth[0], args.size[0])
+    exit()
 
 if args.subparser_name == "test":
     print("All the okey. Maybe. Or not. Are you okey?")
+    exit()
