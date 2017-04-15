@@ -2,7 +2,7 @@
 import re
 import argparse
 import random
-
+import unittest
 
 class Dictogram:
     def __init__(self):
@@ -41,18 +41,6 @@ class Dictogram:
             self._key_gist.insert(self._index(key), 1)
         else:
             self._key_gist[self._index(key)] += 1
-
-    def get_probability(self, key, token):
-        if token in self._word_gist[self._index(key)]:
-            s = sum(self._word_gist[self._index(key)].values())
-            return self._word_gist[self._index(key)].get(token) / s
-        else:
-            return 0.0
-
-    def __getitem__(self, item):
-        p = self._index(item)
-        num = sum(self._word_gist[p].values())
-        return {token: self._word_gist[p].get(token) / num for token in self._word_gist[p].keys()}
 
     def __str__(self):
         answer = '\n'
@@ -133,7 +121,8 @@ def get_probabilities(input_file, depth):
                 prob_word = word_data[k + 1]
                 probabilities.put(cur_word, prob_word)
     except IndexError:
-        # probabilities.add_key(cur_word)
+        if cur_word != '\n':
+            probabilities.add_key(cur_word)
         return probabilities
 
 
@@ -146,28 +135,81 @@ def generate_text(input_file, depth, size):
         text += ' '
         cur_word = dictogram.get_next_word(cur_word)
     text = text.lower()
-    text = text[:1].upper() + text[1:]
+    text = text[:1].upper() + text[1:-1] + '.'
     print(text)
 
+if __name__ == "__main__":
+    inp = "input.txt"
+    with open(inp) as f:
+        args = init_parser().parse_args(f.readline().split())
 
-with open("input_bg.txt") as f:
-    args = init_parser().parse_args(f.readline().split())
+    if args.subparser_name == "probabilities":
+        probs = get_probabilities(inp, args.depth[0])
+        print(str(probs))
+        print(probs)
 
-if args.subparser_name == "probabilities":
-    probs = get_probabilities("input.txt", args.depth[0])
-    print(probs)
-    exit()
+    if args.subparser_name == "tokenize":
+        corpus = tuple(filter(lambda x: x != '\n', get_tokens(inp)))
+        for word in corpus:
+            print(word)
 
-if args.subparser_name == "tokenize":
-    corpus = tuple(filter(lambda x: x != '\n', get_tokens("input.txt")))
-    for word in corpus:
-        print(word)
-    exit()
+    if args.subparser_name == "generate":
+        generate_text(inp, args.depth[0], args.size[0])
 
-if args.subparser_name == "generate":
-    generate_text("input_bg.txt", args.depth[0], args.size[0])
-    exit()
+    if args.subparser_name == "test":
+        print("All the okey. Maybe. Or not. Are you okey?")
 
-if args.subparser_name == "test":
-    print("All the okey. Maybe. Or not. Are you okey?")
-    exit()
+
+class GeneratorTest(unittest.TestCase):
+    def setUp(self):
+        self._test_text_1 = "Счастье всем, и пусть никто не уйдет обиженным."
+        self._test_text_1_tokenized = ['Счастье', ' ', 'всем', ' ', ',', ' ', 'и', ' ',
+                                       'пусть', ' ', 'никто', ' ', 'не', ' ', 'уйдет',
+                                       ' ', 'обиженным', '.']
+        self._test_text_2 = "We have no need of other world. We need mirrors."
+        self._test_text_2_tokenized = ['We', ' ', 'have', ' ', 'no', ' ', 'need', ' ',
+                                       'of', ' ', 'other', ' ', 'world', '.', ' ',
+                                       'We', ' ', 'need', ' ', 'mirrors', '.']
+        self._test_text_3 = "Life is a suffer."
+        self._test_text_3_tokenized = ['Life', ' ', 'is', ' ', 'a', ' ', 'suffer', '.']
+        self._test_text_3_prob = ("\nLife: 0.25\na: 0.25\nis: 0.25\nsuffer: 0.25\nLife\n" +
+                                  "  is: 1.00\na\n  suffer: 1.00\nis\n  a:1.00")
+        self._tokenize_args = "tokenize\n"
+        self._probabilities_args = "probabilities --depth 1\n"
+        self._test_file = "test_input.txt"
+
+    def test_first_text_tokenize(self):
+        with open(self._test_file, "w") as fout:
+            fout.write(self._tokenize_args)
+            fout.write(self._test_text_1)
+        test_corpus = get_tokens(self._test_file)
+        diff_corpus = [i for i in test_corpus if i not in self._test_text_1_tokenized]
+        diff_correct = [i for i in self._test_text_1_tokenized if i not in test_corpus]
+        self.assertEqual(len(diff_correct) + len(diff_corpus), 0)
+
+    def test_second_text_tokenize(self):
+        with open(self._test_file, "w") as fout:
+            fout.write(self._tokenize_args)
+            fout.write(self._test_text_2)
+        test_corpus = get_tokens(self._test_file)
+        diff_corpus = [i for i in test_corpus if i not in self._test_text_2_tokenized]
+        diff_correct = [i for i in self._test_text_2_tokenized if i not in test_corpus]
+        self.assertEqual(len(diff_correct) + len(diff_corpus), 0)
+
+    def test_third_text_tokenize(self):
+        with open(self._test_file, "w") as fout:
+            fout.write(self._tokenize_args)
+            fout.write(self._test_text_3)
+        test_corpus = get_tokens(self._test_file)
+        diff_corpus = [i for i in test_corpus if i not in self._test_text_3_tokenized]
+        diff_correct = [i for i in self._test_text_3_tokenized if i not in test_corpus]
+        self.assertEqual(len(diff_correct) + len(diff_corpus), 0)
+
+    def test_third_text_probabilities(self):
+        with open(self._test_file, "w") as fout:
+            fout.write(self._probabilities_args)
+            fout.write(self._test_text_3)
+        dictogram = str(get_probabilities(self._test_file, 1))
+        diff_dictogram = [i for i in dictogram if i not in self._test_text_3_prob]
+        diff_correct = [i for i in self._test_text_3_prob if i not in dictogram]
+        self.assertEqual(len(diff_correct) + len(diff_dictogram), 0)

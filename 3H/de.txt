@@ -1,0 +1,11 @@
+
+  Life: 0.25
+  a: 0.25
+  is: 0.25
+  suffer: 0.25
+Life
+  is: 1.00
+a
+  suffer: 1.00
+is
+  a: 1.00
