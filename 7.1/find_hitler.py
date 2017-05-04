@@ -1,8 +1,7 @@
 import urllib.request
 import ssl
 import re
-
-import time
+from lxml.html import parse
 
 pattern = re.compile(r"""<a\shref=\"/wiki/[\w]+_?[\w]+\"\stitle=\"[\w\s]+\">""", re.IGNORECASE)
 link_pattern = re.compile("""/wiki/[\w]+_[\w]+""", re.IGNORECASE)
@@ -29,7 +28,7 @@ def get_way(domen, start_address, target_address):
             print(finded)
         move_history.append(cur_move)
         cur_move = domen + finded[0]
-        time.sleep(1)
+        time.sleep(0.5)
 
 
 wiki_addr = "https://en.wikipedia.org"
