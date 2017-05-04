@@ -1,51 +1,48 @@
+from functools import reduce
+
+
+class VectorException(Exception):
+    def __init__(self, msg):
+        self._message = msg
+
+    def __str__(self):
+        return self._message
+
+
 class Vector:
-    body = []
+    def __init__(self, data):
+        if not isinstance(data, list):
+            raise Vector('Wrong data type')
 
-    def __init__(self, n, initial=None):
-        if initial is None:
-            initial = []
-        self.length = n
-        if len(initial) == n:
-            self.body.extend(initial)
+        self._body = data[:]
+        self._n = len(self._body)
+
+    def __str__(self):
+        return ' '.join(tuple(map(lambda x: str(x), self._body)))
+
+    def __add__(self, other):
+        return Vector(list(map(lambda i: other[i] + self._body[i], range(self._n))))
+
+    def __iadd__(self, other):
+        return Vector(list(map(lambda i: other[i] + self._body[i], range(self._n))))
+
+    def __sub__(self, other):
+        return Vector(list(map(lambda i: self._body[i] - other[i], range(self._n))))
+
+    def __isub__(self, other):
+        return Vector(list(map(lambda i: self._body[i] - other[i], range(self._n))))
+
+    def __mul__(self, other):
+        if isinstance(other, Vector):
+            return reduce(lambda a, i: a + self._body[i] * other[i], range(self._n), 0)
         else:
-            for i in self.length:
-                self.body.append(0)
+            return Vector(list(map(lambda x: x * other, self._body)))
 
-    def sum(self, term):
-        for i in self.length:
-            self.body[i] += term[i]
-        return self.body
+    def __eq__(self, other):
+        return reduce(lambda a, i: a and self._body[i] == other[i], range(self._n), True)
 
-    def subtraction(self, subtrahend):
-        for i in self.length:
-            self.body[i] -= subtrahend[i]
-        return self.body
+    def __len__(self):
+        return self._n
 
-    def const_multiplication(self, factor):
-        for i in self.length:
-            self.body[i] *= factor[i]
-        return self.body
-
-    def equals(self, compared):
-        for i in self.length:
-            if self.body[i] != compared[i]:
-                return True
-        return False
-
-    def scalar_product(self, factor):
-        res = 0
-        for i in self.length:
-            res += self.body[i] * factor[i]
-        return res
-
-    def size(self):
-        return self.length
-
-    def get(self, i = 0):
-        if i != 0:
-            return self.body[i]
-        else:
-            return self.body
-
-    def to_string(self):
-        return ' '.join(self.body)
+    def __getitem__(self, item):
+        return self._body[item]
