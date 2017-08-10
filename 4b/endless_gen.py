@@ -6,9 +6,6 @@ def inexhaustible(generator):
         return generator()
     return wrapper
 
-# exec(sys.stdin.read())
-
-
 @inexhaustible
 def some_generator():
     yield 1
